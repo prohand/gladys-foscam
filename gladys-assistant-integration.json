@@ -1,0 +1,704 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Foscam",
+  "description": {
+    "en": "Foscam IP cameras on your network: images, motion alarms, PTZ and presets.",
+    "fr": "Caméras IP Foscam de votre réseau : images, alarmes de mouvement, PTZ et positions.",
+    "de": "Foscam-IP-Kameras im Netzwerk: Bilder, Bewegungsalarme, PTZ und Presets.",
+    "es": "Cámaras IP Foscam de su red: imágenes, alarmas de movimiento, PTZ y posiciones."
+  },
+  "version": "0.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-foscam:0.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-foscam/main/cover.png",
+  "categories": ["security", "multimedia"],
+  "transports": ["local"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "The integration talks to your Foscam cameras directly on your local network, through their HTTP API (CGI): no Foscam cloud, no account, no internet. Give each camera a fixed IP address in your router, then type those addresses below. Create a dedicated user on each camera (operator role) rather than using the admin account.",
+        "fr": "L'intégration parle directement à vos caméras Foscam sur votre réseau local, via leur API HTTP (CGI) : pas de cloud Foscam, pas de compte, pas d'internet. Donnez une adresse IP fixe à chaque caméra dans votre box, puis saisissez ces adresses ci-dessous. Créez un utilisateur dédié sur chaque caméra (rôle opérateur) plutôt que d'utiliser le compte admin.",
+        "de": "Die Integration spricht direkt im lokalen Netzwerk mit deinen Foscam-Kameras, über ihre HTTP-API (CGI): keine Foscam-Cloud, kein Konto, kein Internet. Gib jeder Kamera in deinem Router eine feste IP-Adresse und trage diese Adressen unten ein. Lege auf jeder Kamera einen eigenen Benutzer an (Rolle Bediener), statt das Admin-Konto zu verwenden.",
+        "es": "La integración habla directamente con sus cámaras Foscam en su red local, a través de su API HTTP (CGI): sin nube Foscam, sin cuenta, sin internet. Asigne una dirección IP fija a cada cámara en su router y escriba esas direcciones abajo. Cree un usuario dedicado en cada cámara (rol operador) en lugar de usar la cuenta admin."
+      },
+      "links": [
+        {
+          "url": "https://github.com/prohand/gladys-foscam/blob/main/docs/en.md",
+          "label": {
+            "en": "Integration documentation",
+            "fr": "Documentation de l'intégration",
+            "de": "Dokumentation der Integration",
+            "es": "Documentación de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "cameras",
+      "type": "string",
+      "label": {
+        "en": "Cameras",
+        "fr": "Caméras",
+        "de": "Kameras",
+        "es": "Cámaras"
+      },
+      "description": {
+        "en": "IP addresses of your cameras, separated by commas. Add :port when it is not 88, and Name= in front to name a camera, e.g. Entrance=192.168.1.20, Garden=192.168.1.21:8080. A JSON array is accepted too, for a camera with its own credentials (see the documentation).",
+        "fr": "Adresses IP de vos caméras, séparées par des virgules. Ajoutez :port s'il ne vaut pas 88, et Nom= devant pour nommer une caméra, par ex. Entrée=192.168.1.20, Jardin=192.168.1.21:8080. Un tableau JSON est aussi accepté, pour une caméra avec ses propres identifiants (voir la documentation).",
+        "de": "IP-Adressen deiner Kameras, durch Kommas getrennt. Füge :Port hinzu, wenn er nicht 88 ist, und Name= davor, um eine Kamera zu benennen, z. B. Eingang=192.168.1.20, Garten=192.168.1.21:8080. Ein JSON-Array wird ebenfalls akzeptiert, für eine Kamera mit eigenen Zugangsdaten (siehe Dokumentation).",
+        "es": "Direcciones IP de sus cámaras, separadas por comas. Añada :puerto si no es 88, y Nombre= delante para nombrar una cámara, p. ej. Entrada=192.168.1.20, Jardín=192.168.1.21:8080. También se acepta un array JSON, para una cámara con sus propias credenciales (vea la documentación)."
+      },
+      "placeholder": {
+        "en": "Entrance=192.168.1.20, Garden=192.168.1.21:8080",
+        "fr": "Entrée=192.168.1.20, Jardin=192.168.1.21:8080",
+        "de": "Eingang=192.168.1.20, Garten=192.168.1.21:8080",
+        "es": "Entrada=192.168.1.20, Jardín=192.168.1.21:8080"
+      },
+      "required": true
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "label": {
+        "en": "Username",
+        "fr": "Nom d'utilisateur",
+        "de": "Benutzername",
+        "es": "Usuario"
+      },
+      "description": {
+        "en": "User of the cameras (the same on every camera, unless set per camera in a JSON list).",
+        "fr": "Utilisateur des caméras (le même sur toutes, sauf s'il est précisé par caméra dans une liste JSON).",
+        "de": "Benutzer der Kameras (auf allen gleich, außer er ist in einer JSON-Liste pro Kamera angegeben).",
+        "es": "Usuario de las cámaras (el mismo en todas, salvo que se indique por cámara en una lista JSON)."
+      },
+      "placeholder": {
+        "en": "admin",
+        "fr": "admin",
+        "de": "admin",
+        "es": "admin"
+      },
+      "required": true,
+      "default": "admin"
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "Password",
+        "fr": "Mot de passe",
+        "de": "Passwort",
+        "es": "Contraseña"
+      },
+      "description": {
+        "en": "Password of that user. Careful: after a few wrong passwords, a Foscam camera locks the account for a while.",
+        "fr": "Mot de passe de cet utilisateur. Attention : après quelques mauvais mots de passe, une caméra Foscam bloque le compte un moment.",
+        "de": "Passwort dieses Benutzers. Achtung: Nach einigen falschen Passwörtern sperrt eine Foscam-Kamera das Konto eine Weile.",
+        "es": "Contraseña de ese usuario. Cuidado: tras varias contraseñas erróneas, una cámara Foscam bloquea la cuenta un tiempo."
+      },
+      "required": false
+    },
+    {
+      "key": "snapshot_interval",
+      "type": "number",
+      "label": {
+        "en": "Image refresh (s)",
+        "fr": "Rafraîchissement de l'image (s)",
+        "de": "Bildaktualisierung (s)",
+        "es": "Actualización de imagen (s)"
+      },
+      "description": {
+        "en": "Seconds between two images sent to Gladys (5 minimum). 0 sends none: Gladys then asks for an image only when you open the camera.",
+        "fr": "Secondes entre deux images envoyées à Gladys (5 minimum). 0 n'en envoie aucune : Gladys demande alors une image seulement quand vous ouvrez la caméra.",
+        "de": "Sekunden zwischen zwei an Gladys gesendeten Bildern (mindestens 5). 0 sendet keine: Gladys fragt dann nur ein Bild an, wenn du die Kamera öffnest.",
+        "es": "Segundos entre dos imágenes enviadas a Gladys (mínimo 5). 0 no envía ninguna: Gladys pide entonces una imagen solo al abrir la cámara."
+      },
+      "required": false,
+      "default": 60,
+      "min": 0,
+      "max": 3600
+    },
+    {
+      "key": "detection_interval",
+      "type": "number",
+      "label": {
+        "en": "Alarm check (s)",
+        "fr": "Lecture des alarmes (s)",
+        "de": "Alarmabfrage (s)",
+        "es": "Lectura de alarmas (s)"
+      },
+      "description": {
+        "en": "Seconds between two reads of the camera alarms (motion, person, sound). 2 catches every alarm.",
+        "fr": "Secondes entre deux lectures des alarmes de la caméra (mouvement, personne, son). 2 suffit à toutes les voir.",
+        "de": "Sekunden zwischen zwei Abfragen der Kameraalarme (Bewegung, Person, Geräusch). 2 erfasst jeden Alarm.",
+        "es": "Segundos entre dos lecturas de las alarmas de la cámara (movimiento, persona, sonido). 2 basta para verlas todas."
+      },
+      "required": false,
+      "default": 2,
+      "min": 1,
+      "max": 60
+    },
+    {
+      "key": "ptz_step_ms",
+      "type": "number",
+      "label": {
+        "en": "PTZ step (ms)",
+        "fr": "Pas PTZ (ms)",
+        "de": "PTZ-Schritt (ms)",
+        "es": "Paso PTZ (ms)"
+      },
+      "description": {
+        "en": "Motorized cameras: how long a move lasts before the integration stops it, in milliseconds (5000 at most).",
+        "fr": "Caméras motorisées : durée d'un mouvement avant que l'intégration ne l'arrête, en millisecondes (5000 au plus).",
+        "de": "Motorisierte Kameras: wie lange eine Bewegung dauert, bevor die Integration sie stoppt, in Millisekunden (höchstens 5000).",
+        "es": "Cámaras motorizadas: cuánto dura un movimiento antes de que la integración lo detenga, en milisegundos (5000 como máximo)."
+      },
+      "required": false,
+      "default": 800,
+      "min": 100,
+      "max": 5000
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 60
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "detection",
+      "label": {
+        "en": "Camera detection",
+        "fr": "Détection par une caméra",
+        "de": "Kamera-Erkennung",
+        "es": "Detección de cámara"
+      },
+      "description": {
+        "en": "A Foscam camera raised an alarm: motion, person, sound or alarm input.",
+        "fr": "Une caméra Foscam a déclenché une alarme : mouvement, personne, son ou entrée alarme.",
+        "de": "Eine Foscam-Kamera hat Alarm ausgelöst: Bewegung, Person, Geräusch oder Alarmeingang.",
+        "es": "Una cámara Foscam disparó una alarma: movimiento, persona, sonido o entrada de alarma."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          }
+        },
+        {
+          "key": "kind",
+          "type": "multi_select",
+          "label": {
+            "en": "Detection",
+            "fr": "Détection",
+            "de": "Erkennung",
+            "es": "Detección"
+          },
+          "options": [
+            {
+              "value": "motion",
+              "label": {
+                "en": "Motion",
+                "fr": "Mouvement",
+                "de": "Bewegung",
+                "es": "Movimiento"
+              }
+            },
+            {
+              "value": "person",
+              "label": {
+                "en": "Person",
+                "fr": "Personne",
+                "de": "Person",
+                "es": "Persona"
+              }
+            },
+            {
+              "value": "sound",
+              "label": {
+                "en": "Sound",
+                "fr": "Son",
+                "de": "Geräusch",
+                "es": "Sonido"
+              }
+            },
+            {
+              "value": "io",
+              "label": {
+                "en": "Alarm input",
+                "fr": "Entrée alarme",
+                "de": "Alarmeingang",
+                "es": "Entrada de alarma"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "kind",
+          "type": "string",
+          "label": {
+            "en": "Detection",
+            "fr": "Détection",
+            "de": "Erkennung",
+            "es": "Detección"
+          }
+        },
+        {
+          "key": "camera_name",
+          "type": "string",
+          "label": {
+            "en": "Camera name",
+            "fr": "Nom de la caméra",
+            "de": "Kameraname",
+            "es": "Nombre de la cámara"
+          }
+        }
+      ]
+    },
+    {
+      "key": "camera_connection",
+      "label": {
+        "en": "Camera offline or back",
+        "fr": "Caméra hors ligne ou revenue",
+        "de": "Kamera offline oder zurück",
+        "es": "Cámara caída o recuperada"
+      },
+      "description": {
+        "en": "A Foscam camera stopped answering, or answers again.",
+        "fr": "Une caméra Foscam ne répond plus, ou répond de nouveau.",
+        "de": "Eine Foscam-Kamera antwortet nicht mehr oder wieder.",
+        "es": "Una cámara Foscam dejó de responder, o vuelve a responder."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          }
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "State",
+            "fr": "État",
+            "de": "Zustand",
+            "es": "Estado"
+          },
+          "options": [
+            {
+              "value": "offline",
+              "label": {
+                "en": "Offline",
+                "fr": "Hors ligne",
+                "de": "Offline",
+                "es": "Sin conexión"
+              }
+            },
+            {
+              "value": "online",
+              "label": {
+                "en": "Back online",
+                "fr": "De nouveau en ligne",
+                "de": "Wieder online",
+                "es": "De nuevo en línea"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "State",
+            "fr": "État",
+            "de": "Zustand",
+            "es": "Estado"
+          }
+        },
+        {
+          "key": "camera_name",
+          "type": "string",
+          "label": {
+            "en": "Camera name",
+            "fr": "Nom de la caméra",
+            "de": "Kameraname",
+            "es": "Nombre de la cámara"
+          }
+        },
+        {
+          "key": "reason",
+          "type": "string",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "take_snapshot",
+      "label": {
+        "en": "Take a camera snapshot",
+        "fr": "Prendre une photo",
+        "de": "Kamerabild aufnehmen",
+        "es": "Tomar una instantánea"
+      },
+      "description": {
+        "en": "Send a fresh image of the camera to Gladys, ready for the \"Send camera image\" action.",
+        "fr": "Envoie une image fraîche de la caméra à Gladys, prête pour l'action « Envoyer l'image de la caméra ».",
+        "de": "Sendet ein frisches Kamerabild an Gladys, bereit für die Aktion „Kamerabild senden“.",
+        "es": "Envía una imagen reciente de la cámara a Gladys, lista para la acción \"Enviar imagen de cámara\"."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "captured",
+          "type": "boolean",
+          "label": {
+            "en": "Image taken",
+            "fr": "Image prise",
+            "de": "Bild aufgenommen",
+            "es": "Imagen tomada"
+          }
+        }
+      ]
+    },
+    {
+      "key": "goto_preset",
+      "label": {
+        "en": "Move camera to a preset",
+        "fr": "Envoyer la caméra à une position",
+        "de": "Kamera auf Preset fahren",
+        "es": "Mover cámara a una posición"
+      },
+      "description": {
+        "en": "Motorized cameras: go to a position saved in the camera.",
+        "fr": "Caméras motorisées : va à une position enregistrée dans la caméra.",
+        "de": "Motorisierte Kameras: fährt eine in der Kamera gespeicherte Position an.",
+        "es": "Cámaras motorizadas: va a una posición guardada en la cámara."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        },
+        {
+          "key": "preset",
+          "type": "string",
+          "label": {
+            "en": "Preset name",
+            "fr": "Nom de la position",
+            "de": "Name des Presets",
+            "es": "Nombre de la posición"
+          },
+          "placeholder": {
+            "en": "TopMost",
+            "fr": "TopMost",
+            "de": "TopMost",
+            "es": "TopMost"
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "moved",
+          "type": "boolean",
+          "label": {
+            "en": "Moved",
+            "fr": "Déplacée",
+            "de": "Bewegt",
+            "es": "Movida"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_motion_detection",
+      "label": {
+        "en": "Arm or disarm motion detection",
+        "fr": "Activer ou couper la détection",
+        "de": "Bewegungserkennung schalten",
+        "es": "Activar o desactivar detección"
+      },
+      "description": {
+        "en": "Turn the motion detection of the camera on or off (e.g. on when you leave home).",
+        "fr": "Active ou coupe la détection de mouvement de la caméra (par ex. activée quand vous partez).",
+        "de": "Schaltet die Bewegungserkennung der Kamera ein oder aus (z. B. ein, wenn du gehst).",
+        "es": "Activa o desactiva la detección de movimiento de la cámara (p. ej. activada al salir de casa)."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        },
+        {
+          "key": "enabled",
+          "type": "boolean",
+          "label": {
+            "en": "Armed",
+            "fr": "Activée",
+            "de": "Aktiv",
+            "es": "Activada"
+          },
+          "required": true,
+          "default": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "applied",
+          "type": "boolean",
+          "label": {
+            "en": "Applied",
+            "fr": "Appliqué",
+            "de": "Angewendet",
+            "es": "Aplicado"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_night_vision",
+      "label": {
+        "en": "Set night vision",
+        "fr": "Régler la vision nocturne",
+        "de": "Nachtsicht einstellen",
+        "es": "Ajustar visión nocturna"
+      },
+      "description": {
+        "en": "Infrared LEDs: automatic, forced on or forced off.",
+        "fr": "LED infrarouges : automatique, forcées allumées ou forcées éteintes.",
+        "de": "Infrarot-LEDs: automatisch, immer an oder immer aus.",
+        "es": "LED infrarrojos: automático, siempre encendidos o siempre apagados."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        },
+        {
+          "key": "mode",
+          "type": "select",
+          "label": {
+            "en": "Mode",
+            "fr": "Mode",
+            "de": "Modus",
+            "es": "Modo"
+          },
+          "required": true,
+          "default": "auto",
+          "options": [
+            {
+              "value": "auto",
+              "label": {
+                "en": "Automatic",
+                "fr": "Automatique",
+                "de": "Automatisch",
+                "es": "Automático"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "On",
+                "fr": "Allumée",
+                "de": "An",
+                "es": "Encendida"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Off",
+                "fr": "Éteinte",
+                "de": "Aus",
+                "es": "Apagada"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "applied",
+          "type": "boolean",
+          "label": {
+            "en": "Applied",
+            "fr": "Appliqué",
+            "de": "Angewendet",
+            "es": "Aplicado"
+          }
+        }
+      ]
+    },
+    {
+      "key": "reboot_camera",
+      "label": {
+        "en": "Reboot a camera",
+        "fr": "Redémarrer une caméra",
+        "de": "Kamera neu starten",
+        "es": "Reiniciar una cámara"
+      },
+      "description": {
+        "en": "Restart the camera (it is offline for about a minute).",
+        "fr": "Redémarre la caméra (elle est hors ligne environ une minute).",
+        "de": "Startet die Kamera neu (sie ist etwa eine Minute offline).",
+        "es": "Reinicia la cámara (queda sin conexión un minuto aprox.)."
+      },
+      "timeout_seconds": 15,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "rebooted",
+          "type": "boolean",
+          "label": {
+            "en": "Reboot sent",
+            "fr": "Redémarrage envoyé",
+            "de": "Neustart gesendet",
+            "es": "Reinicio enviado"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "camera",
+      "label": {
+        "en": "Foscam camera",
+        "fr": "Caméra Foscam",
+        "de": "Foscam-Kamera",
+        "es": "Cámara Foscam"
+      },
+      "description": {
+        "en": "Last image, motion, detection and night vision of one camera.",
+        "fr": "Dernière image, mouvement, détection et vision nocturne d'une caméra.",
+        "de": "Letztes Bild, Bewegung, Erkennung und Nachtsicht einer Kamera.",
+        "es": "Última imagen, movimiento, detección y visión nocturna de una cámara."
+      },
+      "icon": "video",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Camera",
+            "fr": "Caméra",
+            "de": "Kamera",
+            "es": "Cámara"
+          },
+          "required": true
+        }
+      ],
+      "action_timeout_seconds": 20
+    },
+    {
+      "key": "overview",
+      "label": {
+        "en": "Foscam cameras",
+        "fr": "Caméras Foscam",
+        "de": "Foscam-Kameras",
+        "es": "Cámaras Foscam"
+      },
+      "description": {
+        "en": "Every camera at a glance: online, offline, in alarm.",
+        "fr": "Toutes les caméras d'un coup d'œil : en ligne, hors ligne, en alarme.",
+        "de": "Alle Kameras auf einen Blick: online, offline, im Alarm.",
+        "es": "Todas las cámaras de un vistazo: en línea, sin conexión, en alarma."
+      },
+      "icon": "grid",
+      "action_timeout_seconds": 30
+    }
+  ]
+}
