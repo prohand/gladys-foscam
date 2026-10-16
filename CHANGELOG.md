@@ -6,6 +6,8 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.0.1] - 2026-10-16
+
 ### Added
 
 - Foscam HD cameras on the local network, through their CGI API: no Foscam cloud, no account.
@@ -25,4 +27,5 @@ All notable changes to this integration are documented here. The format follows
 - After a wrong password, a camera is left alone for five minutes so that its account does not get locked.
 - Camera addresses are checked before they reach a URL: nothing but a host name or an IP address and a port.
 
-[Unreleased]: https://github.com/prohand/gladys-foscam/commits/main
+[Unreleased]: https://github.com/prohand/gladys-foscam/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/prohand/gladys-foscam/releases/tag/v0.0.1

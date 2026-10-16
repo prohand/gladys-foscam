@@ -1,6 +1,6 @@
 {
   "name": "gladys-foscam",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Gladys Assistant external integration for Foscam IP cameras (local CGI API).",
   "type": "module",

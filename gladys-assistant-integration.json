@@ -8,8 +8,8 @@
     "de": "Foscam-IP-Kameras im Netzwerk: Bilder, Bewegungsalarme, PTZ und Presets.",
     "es": "Cámaras IP Foscam de su red: imágenes, alarmas de movimiento, PTZ y posiciones."
   },
-  "version": "0.0.0",
-  "docker_image": "ghcr.io/prohand/gladys-foscam:0.0.0",
+  "version": "0.0.1",
+  "docker_image": "ghcr.io/prohand/gladys-foscam:0.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-foscam/main/cover.png",
   "categories": ["security", "multimedia"],
