@@ -9,6 +9,8 @@ It talks to each camera through its built-in HTTP API (the Foscam "CGI"). No
 Foscam cloud, no Foscam account, no internet connection is involved: the
 transport badge of every camera reads **local**.
 
+Requires **Gladys 5.3.0** or later.
+
 ## Compatible cameras
 
 The Foscam **HD** cameras, which all share the same API: FI98xx and FI99xx,
