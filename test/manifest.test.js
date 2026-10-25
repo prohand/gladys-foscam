@@ -142,6 +142,11 @@ const CATEGORIES = [
   'notifications',
   'assistants',
   'services',
+  // Added with Gladys 5.3.
+  'transport',
+  'vehicles',
+  'servers',
+  'leisure',
 ];
 
 test('the categories stay inside the vocabulary the store indexes', () => {
@@ -155,9 +160,31 @@ test('the categories stay inside the vocabulary the store indexes', () => {
 
 test('the Gladys floor covers every field the manifest declares', () => {
   // Older cores reject a manifest field they do not know: `categories` needs
-  // 4.86, and the widgets and scene declarations need 5.1.
+  // 4.86, the widgets and scene declarations 5.1, `keywords` / `countries` /
+  // `music` 5.3. The floor is compared as numbers, never as text.
   const [major, minor] = manifest.gladys_version.replace(/^>=/, '').split('.').map(Number);
-  assert.ok(major > 5 || (major === 5 && minor >= 1), `got ${manifest.gladys_version}`);
+  const floorAtLeast = (wantMajor, wantMinor) =>
+    major > wantMajor || (major === wantMajor && minor >= wantMinor);
+  assert.ok(floorAtLeast(5, 1), `got ${manifest.gladys_version}`);
+  if (manifest.keywords || manifest.countries || manifest.music) {
+    assert.ok(floorAtLeast(5, 3), `keywords/countries/music need >=5.3.0`);
+  }
+});
+
+test('the search keywords follow the store rules', () => {
+  const { keywords } = manifest;
+  assert.ok(Array.isArray(keywords) && keywords.length >= 1 && keywords.length <= 10);
+  const normalized = keywords.map((keyword) => keyword.trim().toLowerCase());
+  assert.equal(new Set(normalized).size, keywords.length, 'keywords must be unique');
+  for (const keyword of normalized) {
+    assert.ok(keyword.length >= 2 && keyword.length <= 30, `keyword "${keyword}": 2-30 characters`);
+  }
+});
+
+test('the integration is not limited to some countries', () => {
+  // Foscam cameras are sold worldwide and reached on the LAN: declaring
+  // `countries` would hide the integration from the catalog shelves elsewhere.
+  assert.equal(manifest.countries, undefined);
 });
 
 test('every scene action and widget is handled, and every trigger fired is declared', () => {

@@ -9,6 +9,8 @@ Sie spricht mit jeder Kamera über deren eingebaute HTTP-API (die Foscam-„CGI�
 Keine Foscam-Cloud, kein Foscam-Konto, keine Internetverbindung: Das
 Transport-Badge jeder Kamera zeigt **lokal**.
 
+Erfordert **Gladys 5.3.0** oder neuer.
+
 ## Kompatible Kameras
 
 Die Foscam-**HD**-Kameras, die alle dieselbe API haben: FI98xx und FI99xx,

@@ -10,8 +10,9 @@ cameras**, started from the official
 [JavaScript template](https://github.com/GladysAssistant/integration-template-js). It talks to
 each camera on the LAN through the Foscam CGI API (`/cgi-bin/CGIProxy.fcgi?cmd=...`): images,
 alarms (motion, person, sound, alarm input), motion detection and night vision switches, PTZ and
-presets. No Foscam cloud: the manifest declares `"transports": ["local"]`. Gladys 5.1+ adds two
-scene triggers, five scene actions and two dashboard widgets.
+presets. No Foscam cloud: the manifest declares `"transports": ["local"]`. It requires Gladys
+5.3+ (`gladys_version >=5.3.0`, for the manifest `keywords`), and adds two scene triggers, five
+scene actions and two dashboard widgets.
 
 Runtime dependencies: `@gladysassistant/integration-sdk` and `jpeg-js` (pure-JS JPEG resize, so
 the image needs neither ffmpeg nor a native module).

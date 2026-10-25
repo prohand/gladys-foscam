@@ -6,6 +6,16 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Search keywords in the store catalog (surveillance, webcam, night vision, Foscam models…).
+
+### Changed
+
+- Gladys 5.3.0 or later is now required (manifest `keywords`).
+- `@gladysassistant/integration-sdk` 0.16.
+- The release workflow runs the store admission checks once the image is published; pull requests skip the image check.
+
 ## [0.0.2] - 2026-10-23
 
 - Maintenance release, no functional change.

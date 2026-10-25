@@ -12,6 +12,8 @@ and the SDK
 User documentation: [English](./docs/en.md) · [Français](./docs/fr.md) · [Deutsch](./docs/de.md) ·
 [Español](./docs/es.md).
 
+Requires Gladys 5.3.0 or later (the manifest declares `keywords`).
+
 ## What it does
 
 | Gladys feature                     | From the camera                                                             |
